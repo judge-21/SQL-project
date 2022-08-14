@@ -1,0 +1,43 @@
+/* Query 1 */
+SELECT g.Name Genre,
+       Count(*) No_of_purchases
+FROM Invoice i 
+JOIN InvoiceLine il ON i.InvoiceId = il.InvoiceId
+JOIN track t ON t.TrackId = il.TrackId
+JOIN Genre g ON g.GenreId = t.GenreId
+GROUP BY 1
+ORDER BY 2 DESC
+
+/* Query 2 */
+SELECT g.Name Genre_name,
+       count(*) No_of_tracks
+FROM Track t
+JOIN Genre g ON t.GenreId = g.GenreId
+WHERE t.UnitPrice >
+    (SELECT avg(Track.unitprice)
+     FROM Track)
+GROUP BY 1
+ORDER BY 2 DESC
+
+/* Query 3 */
+SELECT strftime('%Y', i.invoiceDate) YEAR,
+		SUM(il.UnitPrice * il.Quantity) Sales
+FROM Invoice i
+JOIN InvoiceLine il ON i.InvoiceId = il.InvoiceId
+JOIN Track t ON t.TrackId = il.TrackId
+JOIN Genre g ON g.GenreId= t.GenreId
+WHERE g.Name = 'Rock'
+GROUP BY 1
+ORDER BY 1 DESC
+
+/* Query 4 */
+SELECT a.name,
+       COUNT (*) no_of_tracks
+FROM Artist a
+JOIN Album al ON a.ArtistId = al.ArtistId
+JOIN track t ON al.AlbumId = t.AlbumId
+JOIN Genre g ON g.GenreId= t.GenreId
+WHERE g.name = 'Rock'
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 10
